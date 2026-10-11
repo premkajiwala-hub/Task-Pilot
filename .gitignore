@@ -1,0 +1,7 @@
+
+# Python virtual environment (created by desktop/rebuild.bat)
+backend/.venv/
+.venv/
+
+# Launcher logs
+desktop/logs/

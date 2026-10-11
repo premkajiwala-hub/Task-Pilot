@@ -1,52 +1,379 @@
 @import "tailwindcss";
 
-@theme {
-  --color-border: hsl(var(--border));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --radius-xl: calc(var(--radius) + 2px);
-  --radius-2xl: calc(var(--radius) + 4px);
+/* ==========================================================================
+   TASKPILOT — DESIGN SYSTEM
+   --------------------------------------------------------------------------
+   A single source of truth for colour, type, space, radius, elevation and
+   motion. Every component consumes these tokens; no component hard-codes a
+   palette value. Three themes swap the primitives at runtime via the
+   `data-theme` attribute on <html>, so the whole surface re-skins without a
+   single component re-render.
+
+   Token namespaces
+     --ds-*   raw theme primitives (swapped per theme)
+     --e-*    elevation / shadow primitives (swapped per theme)
+     @theme   Tailwind-facing aliases, declared `inline` so utilities compile
+              to `var(--ds-*)` and stay live across theme switches
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. THEME PRIMITIVES
+   -------------------------------------------------------------------------- */
+
+/* Theme 1 — Nocturne (default)
+   Deep blue-slate rather than true black, lifted by a desaturated seafoam
+   accent. The hue shift across canvas → surface does the work that a hard
+   border would otherwise have to. */
+:root,
+[data-theme="nocturne"] {
+  color-scheme: dark;
+
+  --ds-canvas: #0d1218;
+  --ds-elevated: #131a22;
+  --ds-surface: #18212b;
+  --ds-surface-2: #1e2833;
+  --ds-surface-3: #26323f;
+
+  --ds-line: rgba(160, 190, 220, 0.09);
+  --ds-line-strong: rgba(160, 190, 220, 0.18);
+
+  --ds-ink: #eaf0f6;
+  --ds-muted: #a6b5c6;
+  --ds-faint: #8496a9;
+
+  --ds-accent: #7fb6ac;
+  --ds-accent-text: #93c4bb;
+  --ds-accent-hover: #93c4bb;
+  --ds-accent-ink: #0d1218;
+  --ds-accent-soft: rgba(127, 182, 172, 0.13);
+  --ds-accent-line: rgba(127, 182, 172, 0.3);
+
+  --ds-high: #dda45f;
+  --ds-medium: #8496a9;
+  --ds-low: #64768a;
+
+  --ds-positive: #6fbf8b;
+  --ds-warning: #dda45f;
+  --ds-danger: #e08279;
+
+  --ds-track: rgba(160, 190, 220, 0.09);
+  --ds-ring: rgba(127, 182, 172, 0.7);
+  --ds-scrim: rgba(5, 8, 11, 0.66);
+
+  --e-soft: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --e-lift: 0 4px 16px -4px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(160, 190, 220, 0.06);
+  --e-float: 0 16px 40px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(160, 190, 220, 0.07);
+  --e-modal: 0 32px 80px -16px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(160, 190, 220, 0.09);
 }
 
-:root {
-  --background: 210 40% 98%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --radius: 1rem;
+/* Theme 2 — Sandstone
+   Warm paper rather than pure white, with a deep clay accent. Same structure
+   as Nocturne, inverted in value. */
+[data-theme="sandstone"] {
+  color-scheme: light;
+
+  --ds-canvas: #f5f2ed;
+  --ds-elevated: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-2: #faf8f4;
+  --ds-surface-3: #f0ebe3;
+
+  --ds-line: #e6dfd4;
+  --ds-line-strong: #d3c9ba;
+
+  --ds-ink: #211d18;
+  --ds-muted: #6b6259;
+  /* As in any near-white theme, AA on the canvas pulls the third grey onto
+     the second; the eyebrow keeps its hierarchy through size and weight. */
+  --ds-faint: #6b6259;
+
+  --ds-accent: #8c4f3a;
+  --ds-accent-text: #8c4f3a;
+  --ds-accent-hover: #74402e;
+  --ds-accent-ink: #ffffff;
+  --ds-accent-soft: rgba(140, 79, 58, 0.09);
+  --ds-accent-line: rgba(140, 79, 58, 0.26);
+
+  --ds-high: #8c4f3a;
+  --ds-medium: #8a8177;
+  /* Kept at/above 3:1 on white — a priority dot is a non-text UI indicator. */
+  --ds-low: #94897a;
+
+  --ds-positive: #3f7d52;
+  --ds-warning: #8a6216;
+  --ds-danger: #b23f2e;
+
+  --ds-track: rgba(33, 29, 24, 0.08);
+  --ds-ring: rgba(140, 79, 58, 0.55);
+  --ds-scrim: rgba(33, 29, 24, 0.3);
+
+  --e-soft: 0 1px 2px rgba(60, 48, 36, 0.06);
+  --e-lift: 0 4px 14px -4px rgba(60, 48, 36, 0.12), 0 0 0 1px rgba(60, 48, 36, 0.04);
+  --e-float: 0 14px 34px -12px rgba(60, 48, 36, 0.18), 0 0 0 1px rgba(60, 48, 36, 0.05);
+  --e-modal: 0 30px 70px -18px rgba(60, 48, 36, 0.3), 0 0 0 1px rgba(60, 48, 36, 0.06);
 }
 
-.dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 7%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 7%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 84% 4.9%;
-  --border: 217.2 19% 27%;
+/* Theme 3 — Black + White + Red. Red is reserved for active nav, primary
+   actions, high-priority signal, progress and chart highlights — never for
+   body copy, borders or backgrounds at large area. */
+[data-theme="crimson"] {
+  color-scheme: dark;
+
+  --ds-canvas: #0d0d0d;
+  --ds-elevated: #171717;
+  --ds-surface: #1e1e1e;
+  --ds-surface-2: #242424;
+  --ds-surface-3: #2b2b2b;
+
+  --ds-line: rgba(255, 255, 255, 0.07);
+  --ds-line-strong: rgba(255, 255, 255, 0.14);
+
+  --ds-ink: #ffffff;
+  --ds-muted: #b8b8b8;
+  --ds-faint: #8c8c8c;
+
+  --ds-accent: #e63946;
+  /* #e63946 clears 3:1 as a fill, bar or dot but only reaches 4.0:1 as small
+     text on #1e1e1e. Accent-coloured *labels* use this slightly lifted red so
+     the brand hue survives without failing AA. */
+  --ds-accent-text: #ec4f5b;
+  --ds-accent-hover: #f04b57;
+  --ds-accent-ink: #ffffff;
+  --ds-accent-soft: rgba(230, 57, 70, 0.13);
+  --ds-accent-line: rgba(230, 57, 70, 0.35);
+
+  --ds-high: #e63946;
+  --ds-medium: #a8a8a8;
+  --ds-low: #737373;
+
+  --ds-positive: #4ade80;
+  --ds-warning: #fbbf24;
+  --ds-danger: #e63946;
+
+  --ds-track: rgba(255, 255, 255, 0.07);
+  --ds-ring: rgba(230, 57, 70, 0.65);
+  --ds-scrim: rgba(0, 0, 0, 0.66);
+
+  --e-soft: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --e-lift: 0 4px 16px -4px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --e-float: 0 16px 40px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --e-modal: 0 32px 80px -16px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  transition: background-color 0.3s ease, color 0.3s ease;
+/* --------------------------------------------------------------------------
+   2. TAILWIND TOKEN MAP
+   `inline` keeps utilities pointing at the live custom property, which is what
+   makes theme switching instant and free of a JS re-paint.
+   -------------------------------------------------------------------------- */
+
+@theme inline {
+  --font-sans: "Inter", "SF Pro Display", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --color-canvas: var(--ds-canvas);
+  --color-elevated: var(--ds-elevated);
+  --color-surface: var(--ds-surface);
+  --color-surface-2: var(--ds-surface-2);
+  --color-surface-3: var(--ds-surface-3);
+
+  --color-line: var(--ds-line);
+  --color-line-strong: var(--ds-line-strong);
+
+  --color-ink: var(--ds-ink);
+  --color-muted: var(--ds-muted);
+  --color-faint: var(--ds-faint);
+
+  --color-accent: var(--ds-accent);
+  --color-accent-text: var(--ds-accent-text);
+  --color-accent-hover: var(--ds-accent-hover);
+  --color-accent-ink: var(--ds-accent-ink);
+  --color-accent-soft: var(--ds-accent-soft);
+  --color-accent-line: var(--ds-accent-line);
+
+  --color-high: var(--ds-high);
+  --color-medium: var(--ds-medium);
+  --color-low: var(--ds-low);
+
+  --color-positive: var(--ds-positive);
+  --color-warning: var(--ds-warning);
+  --color-danger: var(--ds-danger);
+
+  --color-track: var(--ds-track);
+  --color-scrim: var(--ds-scrim);
+
+  /* Radius scale — the whole product lives between 12px and 20px. */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+
+  --shadow-soft: var(--e-soft);
+  --shadow-lift: var(--e-lift);
+  --shadow-float: var(--e-float);
+  --shadow-modal: var(--e-modal);
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Glassmorphism custom utility updated for v4 opacity engine */
-.glass-panel {
-  background-color: color-mix(in srgb, var(--color-white) 70%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--color-white) 20%, transparent);
+/* Theme-scoped variants for the rare case a component needs to diverge. */
+@custom-variant nocturne (&:where([data-theme="nocturne"] *, [data-theme="nocturne"]));
+@custom-variant sandstone (&:where([data-theme="sandstone"] *, [data-theme="sandstone"]));
+@custom-variant crimson (&:where([data-theme="crimson"] *, [data-theme="crimson"]));
+
+/* --------------------------------------------------------------------------
+   3. BASE LAYER
+   -------------------------------------------------------------------------- */
+
+@layer base {
+  * {
+    border-color: var(--ds-line);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--ds-canvas);
+    color: var(--ds-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.021em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--ds-accent-soft);
+    color: var(--ds-ink);
+  }
+
+  ::placeholder {
+    color: var(--ds-faint);
+  }
+
+  /* One focus treatment for the entire product. */
+  :focus-visible {
+    outline: 2px solid var(--ds-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Native date/time pickers inherit the theme instead of the OS default. */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: var(--ds-picker-filter, none);
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 160ms var(--ease-out-quint);
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
-.dark .glass-panel {
-  background-color: color-mix(in srgb, #0f172a 70%, transparent);
-  border: 1px solid color-mix(in srgb, #1e293b 50%, transparent);
+/* Theme crossfade.
+   Applied only for the ~250ms a switch is in flight. A permanent blanket
+   transition would attach one to every element in the document — hundreds of
+   live transitions, and every incidental colour change animating whether we
+   asked for it or not. Components keep their own `transition-*` utilities;
+   this briefly overrides them so the whole surface turns together. */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: background-color 220ms var(--ease-out-quint),
+    border-color 220ms var(--ease-out-quint),
+    color 200ms var(--ease-out-quint),
+    fill 200ms var(--ease-out-quint),
+    stroke 200ms var(--ease-out-quint) !important;
+}
+
+/* Invert the native picker glyph on the dark themes only. */
+:root,
+[data-theme="nocturne"],
+[data-theme="crimson"] {
+  --ds-picker-filter: invert(1);
+}
+
+/* --------------------------------------------------------------------------
+   4. UTILITIES
+   -------------------------------------------------------------------------- */
+
+@layer utilities {
+  /* Slim, theme-aware scrollbar used on every scroll container. */
+  .ds-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ds-line-strong) transparent;
+  }
+
+  .ds-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .ds-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ds-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--ds-line-strong);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  .ds-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ds-faint);
+  }
+
+  /* Section eyebrow: the small uppercase label above a stat or group. */
+  .ds-eyebrow {
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ds-faint);
+  }
+
+  /* Numerals that need to line up in columns (stats, clocks, counters). */
+  .ds-numeric {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+
+  /* Barely-there top-light on cards; reads as depth, not as a border. */
+  .ds-sheen {
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ds-ink) 3.5%, transparent) 0%,
+      transparent 42%
+    );
+  }
 }
